@@ -27,21 +27,57 @@
         </div>
       </nav>    
     <body>
-        <div class="container" id="main">
+        <div class="container-fluid" id="main">
         </div>
     </body>
     <script>
-        var newUL = $('<ul>').attr('class', 'list-group list-group-flush');
-        console.log(newUL);
+        var newTBL = $('<table>')
+            .attr('class', 'table table-striped');
+        var newTbody = $('<tbody>')
+            .appendTo(newTBL);
+        var newTR = $('<tr>')
+            .appendTo(newTbody);
+        var headerList = ['Index', 'Committer Name', 'Message', 'Date']
+        $.each(headerList, function(i, item) {   
+            $('<th>')
+                .html(item)
+                .appendTo(newTR);
+        });          
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+        
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+        
+            return [year, month, day].join('-');
+        }       
         $.get('https://api.github.com/repos/walkman5410/crossroadstest/commits', function(data) {
-            console.log(data);
             $.each(data, function(i, item) {
-                var newLI = $('<li>')
+                var newTR = $('<tr>')
+                    .appendTo(newTbody);
+                //Index
+                $('<td>')
+                    .html(i)
+                    .appendTo(newTR);
+                //Committer Name
+                $('<td>')
+                    .html(data[i].commit.committer.name)
+                    .appendTo(newTR);
+                //Message             
+                $('<td>')
                     .html(data[i].commit.message)
-                    .attr('class', 'list-group-item')
-                    .appendTo(newUL);
+                    .appendTo(newTR);
+                //Date
+                $('<td>')
+                    .html(formatDate(data[i].commit.committer.date))
+                    .appendTo(newTR);                  
             });
         });
-        $('#main').append(newUL);
+        $('#main').append(newTBL);
     </script>
 </html>
