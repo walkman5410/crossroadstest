@@ -27,7 +27,7 @@
         </div>
       </nav>    
     <body>
-        <div class="container-fluid" id="main">
+        <div class="container-lg" id="main">
         </div>
     </body>
     <script>
@@ -57,7 +57,7 @@
             return [year, month, day].join('-');
         }       
         $.get('https://api.github.com/repos/walkman5410/crossroadstest/commits', function(data) {
-            $.each(data, function(i, item) {
+            $.each(data.reverse(), function(i, item) {
                 var newTR = $('<tr>')
                     .appendTo(newTbody);
                 //Index
@@ -70,7 +70,7 @@
                     .appendTo(newTR);
                 //Message             
                 $('<td>')
-                    .html(data[i].commit.message)
+                    .html(data[i].commit.message.replace(/\n/g, "<br />"))
                     .appendTo(newTR);
                 //Date
                 $('<td>')
